@@ -95,6 +95,11 @@ public class ClassAssembly internal constructor(public val node: ClassNode): Mod
 
         val methodNode = MethodNode(ASM9, access.access, name, descriptor, signature, exceptions?.map { coerceType(it).internalName }?.toTypedArray())
         val methodAssembly = MethodAssembly(methodNode)
+
+        if (!access.containsAny(static))
+            methodAssembly.currentLocalIndex++
+        methodAssembly.currentLocalIndex += parameterTypes.size
+
         routine(methodAssembly)
 
         node.methods.add(methodNode)

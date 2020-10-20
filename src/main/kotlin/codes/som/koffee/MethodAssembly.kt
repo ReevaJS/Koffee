@@ -13,6 +13,8 @@ import org.objectweb.asm.tree.TryCatchBlockNode
  * A higher-level representation of ASM's [MethodNode].
  */
 public class MethodAssembly(public val node: MethodNode) : InstructionAssembly, TryCatchContainer, LabelScope, ModifiersAccess, TypesAccess {
+    public var currentLocalIndex: Int = node.maxLocals
+
     override val instructions: InsnList
         get() = node.instructions
 
