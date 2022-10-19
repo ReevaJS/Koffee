@@ -18,12 +18,30 @@ public fun InstructionAssembly.getstatic(owner: TypeLike, name: String, type: Ty
 }
 
 /**
+ * Get the static field from [owner] with [name] and type [T]
+ *
+ * (no stack consumed) -> [T]
+ */
+public inline fun <reified T> InstructionAssembly.getstatic(name: String, type: TypeLike) {
+    getstatic(T::class, name, type)
+}
+
+/**
  * Get the instance field from [owner] with [name] and [type]
  *
  * A -> [type]
  */
 public fun InstructionAssembly.getfield(owner: TypeLike, name: String, type: TypeLike) {
     instructions.add(FieldInsnNode(GETFIELD, coerceType(owner).internalName, name, coerceType(type).descriptor))
+}
+
+/**
+ * Get the instance field from [owner] with [name] and type [T]
+ *
+ * A -> [T]
+ */
+public inline fun <reified T> InstructionAssembly.getfield(name: String, type: TypeLike) {
+    getfield(T::class, name, type)
 }
 
 /**
@@ -36,12 +54,30 @@ public fun InstructionAssembly.putstatic(owner: TypeLike, name: String, type: Ty
 }
 
 /**
+ * Set the static field from [owner] with [name] and type [T]
+ *
+ * [T] -> (no stack produced)
+ */
+public inline fun <reified T> InstructionAssembly.putstatic(name: String, type: TypeLike) {
+    putstatic(T::class, name, type)
+}
+
+/**
  * Set the instance field from [owner] with [name] and [type]
  *
  * [type] A -> (no stack produced)
  */
 public fun InstructionAssembly.putfield(owner: TypeLike, name: String, type: TypeLike) {
     instructions.add(FieldInsnNode(PUTFIELD, coerceType(owner).internalName, name, coerceType(type).descriptor))
+}
+
+/**
+ * Set the instance field from [owner] with [name] and type [T]
+ *
+ * [T] A -> (no stack produced)
+ */
+public inline fun <reified T> InstructionAssembly.putfield(name: String, type: TypeLike) {
+    putfield(T::class, name, type)
 }
 
 /**

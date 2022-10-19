@@ -12,11 +12,11 @@ import codes.som.koffee.types.void
  * Pass the return type and parameter types with [constructorTypes].
  * Add elements to the stack as necessary by adding instructions with [initializerBlock].
  */
-public fun <S : InstructionAssembly> S.construct(
+public fun InstructionAssembly.construct(
     type: TypeLike,
-    vararg constructorTypes: TypeLike,
+    vararg parameterTypes: TypeLike,
     initializerName: String = "<init>",
-    initializerBlock: S.() -> Unit = {}
+    initializerBlock: InstructionAssembly.() -> Unit = {}
 ) {
     val returnType = constructorTypes.getOrElse(0) { void }
     val parameterTypes = constructorTypes.drop(1).toTypedArray()
@@ -25,4 +25,12 @@ public fun <S : InstructionAssembly> S.construct(
     dup
     initializerBlock(this)
     invokespecial(type, initializerName, returnType, *parameterTypes)
+}
+
+public inline fun <reified T> InstructionAssembly.construct(
+    vararg constructorTypes: TypeLike, 
+    initializerName: String = "<init>", 
+    noinline initializerBlock: InstructionAssembly.() -> Unit = {}
+) {
+    construct(T::class, *constructorTypes, initializerName, initializerBlock)
 }

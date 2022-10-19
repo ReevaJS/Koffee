@@ -188,6 +188,16 @@ public fun InstructionAssembly.newarray(type: TypeLike) {
 }
 
 /**
+ * Create a new primitive array.
+ * Takes the type of the array as a reified generic.
+ *
+ * I -> A
+ */
+public inline fun <reified T> InstructionAssembly.newarray() {
+    newarray(T::class)
+}
+
+/**
  * Create a new object array.
  * Takes the type of the array as a direct argument.
  *
@@ -198,6 +208,16 @@ public fun InstructionAssembly.anewarray(type: TypeLike) {
 }
 
 /**
+ * Create a new object array.
+ * Takes the type of the array as a reified generic.
+ *
+ * I -> A
+ */
+public inline fun <reified T> InstructionAssembly.anewarray() {
+    anewarray(T::class)
+}
+
+/**
  * Create a new multi-dimensional array.
  * Takes the type of the array and the number of dimensions as direct arguments.
  *
@@ -205,4 +225,14 @@ public fun InstructionAssembly.anewarray(type: TypeLike) {
  */
 public fun InstructionAssembly.multianewarray(type: TypeLike, dimensions: Int) {
     instructions.add(MultiANewArrayInsnNode(coerceType(type).descriptor, dimensions))
+}
+
+/**
+ * Create a new multi-dimensional array.
+ * Takes the type of the array as a reified generic and the number of dimensions as a direct argument.
+ *
+ * I -> A
+ */
+public inline fun <reified T> InstructionAssembly.multianewarray(dimensions: Int) {
+    multianewarray(T::class, dimensions)
 }

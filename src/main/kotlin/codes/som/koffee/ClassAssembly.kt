@@ -81,6 +81,10 @@ public class ClassAssembly internal constructor(public val node: ClassNode): Mod
         return fieldNode
     }
 
+    public inline fun <reified T> field(access: Modifiers, name: String, signature: String? = null, value: Any? = null): FieldNode {
+        return field(access, name, T::class, signature, value)
+    }
+
     /**
      * Create a new method with the given information.
      *

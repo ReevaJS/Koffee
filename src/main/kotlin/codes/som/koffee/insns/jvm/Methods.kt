@@ -139,3 +139,31 @@ public fun InstructionAssembly.invokeinterface(owner: TypeLike, method: MethodNo
 public fun InstructionAssembly.invokestatic(owner: TypeLike, method: MethodNode) {
     invokestatic(owner, method.name, method.desc)
 }
+
+/**
+ * A version of invokevirtual which takes the owner parameter as in reified generic parameter.
+ */
+public inline fun <reified T> InstructionAssembly.invokevirtual(name: String, returnType: TypeLike, vararg parameterTypes: TypeLike) {
+    invokevirtual(T::class, name, constructMethodDescriptor(returnType, *parameterTypes))
+}
+
+/**
+ * A version of invokespecial which takes the owner parameter as in reified generic parameter.
+ */
+public inline fun <reified T> InstructionAssembly.invokespecial(name: String, returnType: TypeLike, vararg parameterTypes: TypeLike) {
+    invokespecial(T::class, name, constructMethodDescriptor(returnType, *parameterTypes))
+}
+
+/**
+ * A version of invokeinterface which takes the owner parameter as in reified generic parameter.
+ */
+public inline fun <reified T> InstructionAssembly.invokeinterface(name: String, returnType: TypeLike, vararg parameterTypes: TypeLike) {
+    invokeinterface(T::class, name, constructMethodDescriptor(returnType, *parameterTypes))
+}
+
+/**
+ * A version of invokestatic which takes the owner parameter as in reified generic parameter.
+ */
+public inline fun <reified T> InstructionAssembly.invokestatic(name: String, returnType: TypeLike, vararg parameterTypes: TypeLike) {
+    invokestatic(T::class, name, constructMethodDescriptor(returnType, *parameterTypes))
+}

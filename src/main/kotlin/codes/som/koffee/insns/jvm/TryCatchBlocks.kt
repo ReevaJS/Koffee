@@ -49,6 +49,13 @@ public class GuardAssembly<T>(private val assembly: T,
 
         return this
     }
+
+    /**
+     * Vresion of handle that takes the exception type as an reified generic parameter
+     */
+    public inline fun <reified U> handle(fallthrough: Boolean = false, noinline routine: GuardHandlerAssemblyContext<T>.() -> Unit): GuardAssembly<T> {
+        return handle(U::class, fallthrough, routine)
+    }
 }
 
 /**
