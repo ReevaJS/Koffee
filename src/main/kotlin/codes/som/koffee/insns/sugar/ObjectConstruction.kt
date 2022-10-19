@@ -9,7 +9,7 @@ import codes.som.koffee.types.void
 
 /**
  * Construct an object of the given [type].
- * Pass the return type and parameter types with [constructorTypes].
+ * Pass the return type and parameter types with [parameterTypes].
  * Add elements to the stack as necessary by adding instructions with [initializerBlock].
  */
 public fun InstructionAssembly.construct(
@@ -18,19 +18,16 @@ public fun InstructionAssembly.construct(
     initializerName: String = "<init>",
     initializerBlock: InstructionAssembly.() -> Unit = {}
 ) {
-    val returnType = constructorTypes.getOrElse(0) { void }
-    val parameterTypes = constructorTypes.drop(1).toTypedArray()
-
     new(type)
     dup
     initializerBlock(this)
-    invokespecial(type, initializerName, returnType, *parameterTypes)
+    invokespecial(type, initializerName, void, *parameterTypes)
 }
 
 public inline fun <reified T> InstructionAssembly.construct(
-    vararg constructorTypes: TypeLike, 
+    vararg parameterTypes: TypeLike, 
     initializerName: String = "<init>", 
     noinline initializerBlock: InstructionAssembly.() -> Unit = {}
 ) {
-    construct(T::class, *constructorTypes, initializerName, initializerBlock)
+    construct(T::class, *parameterTypes, initializerName, initializerBlock)
 }
