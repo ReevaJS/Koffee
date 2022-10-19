@@ -15,7 +15,7 @@ import codes.som.koffee.types.coerceType as coerceTypeStatic
  * A higher-level representation of a class than ASM's [ClassNode].
  * It supports easy creation of new [method]s and [field]s.
  */
-public class ClassAssembly internal constructor(public val node: ClassNode): ModifiersAccess, TypesAccess {
+public open class ClassAssembly internal constructor(public val node: ClassNode): ModifiersAccess, TypesAccess {
     internal constructor(access: Modifiers, name: String, version: Int, superClass: TypeLike, interfaces: List<TypeLike>) : this(ClassNode(ASM9).also {
         it.access = access.access
         it.name = name
