@@ -16,11 +16,11 @@ import codes.som.koffee.types.coerceType as coerceTypeStatic
  * It supports easy creation of new [method]s and [field]s.
  */
 public class ClassAssembly internal constructor(public val node: ClassNode): ModifiersAccess, TypesAccess {
-    internal constructor(access: Modifiers, name: String, version: Int, superName: String, interfaces: List<TypeLike>) : this(ClassNode(ASM9).also {
+    internal constructor(access: Modifiers, name: String, version: Int, superClass: TypeLike, interfaces: List<TypeLike>) : this(ClassNode(ASM9).also {
         it.access = access.access
         it.name = name
         it.version = version
-        it.superName = superName
+        it.superName = coerceTypeStatic(superClass).internalName
         it.interfaces = interfaces.map { type -> coerceTypeStatic(type).internalName }
     })
 
@@ -115,8 +115,8 @@ public class ClassAssembly internal constructor(public val node: ClassNode): Mod
 /**
  * Assemble a class with the given information and creation block, and return the resulting [ClassNode].
  */
-public fun assembleClass(access: Modifiers, name: String, version: Int = V1_8, superName: String = "java/lang/Object", interfaces: List<TypeLike> = listOf(), routine: ClassAssembly.() -> Unit): ClassNode {
-    val assembly = ClassAssembly(access, name, version, superName, interfaces)
+public fun assembleClass(access: Modifiers, name: String, version: Int = V1_8, superClass: TypeLike = "java/lang/Object", interfaces: List<TypeLike> = listOf(), routine: ClassAssembly.() -> Unit): ClassNode {
+    val assembly = ClassAssembly(access, name, version, superClass, interfaces)
     routine(assembly)
     return assembly.node
 }
