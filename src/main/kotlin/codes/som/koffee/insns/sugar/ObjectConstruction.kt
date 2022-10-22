@@ -25,9 +25,14 @@ public fun InstructionAssembly.construct(
 }
 
 public inline fun <reified T> InstructionAssembly.construct(
-    vararg parameterTypes: TypeLike, 
-    initializerName: String = "<init>", 
+    vararg parameterTypes: TypeLike,
+    initializerName: String = "<init>",
     noinline initializerBlock: InstructionAssembly.() -> Unit = {}
 ) {
-    construct(T::class, *parameterTypes, initializerName, initializerBlock)
+    construct(
+        T::class,
+        parameterTypes = parameterTypes,
+        initializerName = initializerName,
+        initializerBlock = initializerBlock,
+    )
 }
