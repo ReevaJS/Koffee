@@ -1,9 +1,9 @@
 package codes.som.koffee.insns.jvm
 
 import codes.som.koffee.insns.InstructionAssembly
-import codes.som.koffee.types.TypeLike
-import codes.som.koffee.types.coerceType
+import codes.som.koffee.types.*
 import org.objectweb.asm.Opcodes.*
+import org.objectweb.asm.Type
 import org.objectweb.asm.tree.TypeInsnNode
 
 /**
@@ -31,7 +31,43 @@ public inline fun <reified T> InstructionAssembly.new() {
  * A -> A
  */
 public fun InstructionAssembly.checkcast(type: TypeLike) {
-    instructions.add(TypeInsnNode(CHECKCAST, coerceType(type).internalName))
+    val coercedType = coerceType(type)
+    when (coercedType.sort) {
+        Type.VOID -> error("cannot cast to void")
+        Type.BOOLEAN -> {
+            checkcast<Boolean>()
+            invokevirtual<Boolean>("booleanValue", boolean)
+        }
+        Type.CHAR -> {
+            checkcast<Char>()
+            invokevirtual<Char>("charValue", char)
+        }
+        Type.BYTE -> {
+            checkcast<Byte>()
+            invokevirtual<Byte>("byteValue", byte)
+        }
+        Type.SHORT -> {
+            checkcast<Short>()
+            invokevirtual<Short>("shortValue", short)
+        }
+        Type.INT -> {
+            checkcast<Int>()
+            invokevirtual<Int>("intValue", int)
+        }
+        Type.LONG -> {
+            checkcast<Long>()
+            invokevirtual<Long>("longValue", long)
+        }
+        Type.FLOAT -> {
+            checkcast<Float>()
+            invokevirtual<Float>("floatValue", float)
+        }
+        Type.DOUBLE -> {
+            checkcast<Double>()
+            invokevirtual<Double>("doubleValue", double)
+        }
+        else -> instructions.add(TypeInsnNode(CHECKCAST, coercedType.internalName))
+    }
 }
 
 /**

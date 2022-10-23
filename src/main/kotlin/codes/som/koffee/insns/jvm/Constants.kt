@@ -4,13 +4,15 @@ package codes.som.koffee.insns.jvm
 
 import codes.som.koffee.ClassAssembly
 import codes.som.koffee.insns.InstructionAssembly
-import codes.som.koffee.types.TypeLike
+import codes.som.koffee.types.*
 import org.objectweb.asm.ConstantDynamic
 import org.objectweb.asm.Handle
 import org.objectweb.asm.Opcodes.*
+import org.objectweb.asm.Type
 import org.objectweb.asm.tree.InsnNode
 import org.objectweb.asm.tree.IntInsnNode
 import org.objectweb.asm.tree.LdcInsnNode
+import org.objectweb.asm.tree.TypeInsnNode
 
 /**
  * Add null to the stack.
@@ -173,8 +175,26 @@ public fun InstructionAssembly.sipush(v: Int) {
  * - (no stack consumed) -> A
  */
 public fun InstructionAssembly.ldc(v: Any) {
+    if (v is Class<*> || v is Type) {
+        when (coerceType(v).sort) {
+            Type.VOID -> error("cannot ldc void")
+            Type.BOOLEAN -> getstatic<Boolean>("TYPE", Class::class)
+            Type.CHAR -> getstatic<Char>("TYPE", Class::class)
+            Type.BYTE -> getstatic<Byte>("TYPE", Class::class)
+            Type.SHORT -> getstatic<Short>("TYPE", Class::class)
+            Type.INT -> getstatic<Int>("TYPE", Class::class)
+            Type.LONG -> getstatic<Long>("TYPE", Class::class)
+            Type.FLOAT -> getstatic<Float>("TYPE", Class::class)
+            Type.DOUBLE -> getstatic<Double>("TYPE", Class::class)
+            else -> instructions.add(LdcInsnNode(v))
+        }
+
+        return
+    }
+
     instructions.add(LdcInsnNode(v))
 }
+
 public fun ClassAssembly.constantDynamic(name: String, type: TypeLike, handle: Handle, vararg boostrapMethodArguments: Any): ConstantDynamic {
     return if (boostrapMethodArguments.isEmpty()) {
         ConstantDynamic(name, coerceType(type).descriptor, handle)
